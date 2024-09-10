@@ -5,5 +5,5 @@ const bird = new Bird(canvas);
 
 document.addEventListener("DOMContentLoaded", () => {
   setTimeout(() => bird.render(), 10);
-  bird.update();
+  bird.start();
 });
