@@ -30,7 +30,7 @@ class Bird {
     this.context = canvas.getContext("2d") as CanvasRenderingContext2D;
     this.interval = null;
     this.scale = 1.25;
-    this.hitbox = true;
+    this.hitbox = false;
     this.state = {
       frames: 0,
       gravity: 0.3,
@@ -87,10 +87,6 @@ class Bird {
       this.state.spriteIndex =
         (this.state.spriteIndex + 1) % this.sprites.length;
     }
-  }
-
-  private checkSkyColision() {
-    return false;
   }
 
   private checkGroundCollision() {
