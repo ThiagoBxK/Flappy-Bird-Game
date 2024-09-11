@@ -7,7 +7,6 @@ interface BirdState {
   gravitySpeed: number;
   posY: number;
   posX: number;
-  scale: number;
   spriteIndex: number;
   size: {
     heigth: number;
@@ -21,26 +20,28 @@ class Bird {
   private sprites: Array<HTMLImageElement>;
   private state: BirdState;
   private interval: any;
+  private hitbox: boolean;
+  private scale: number;
 
   constructor(canvas: HTMLCanvasElement) {
     this.canvas = canvas;
     this.context = canvas.getContext("2d") as CanvasRenderingContext2D;
     this.interval = null;
+    this.scale = 1.25;
     this.state = {
       frames: 0,
       gravity: 0.3,
       gravitySpeed: -2,
       posY: 100,
       posX: 20,
-      scale: 1.25,
       spriteIndex: 0,
       fps: 60,
       size: {
-        width: 0,
-        heigth: 0,
+        width: 34 * this.scale,
+        heigth: 24 * this.scale,
       },
     };
-
+    this.hitbox = true;
     this.sprites = [
       createImage("./images/upflap.png"),
       createImage("./images/midflap.png"),
@@ -50,13 +51,18 @@ class Bird {
     this.canvas.addEventListener("click", (event) => this.handleClick(event));
   }
 
-  private draw(context: CanvasRenderingContext2D, image: HTMLImageElement) {
-    this.clearRect();
+  private showHitBox(context: CanvasRenderingContext2D) {
+    context.strokeStyle = "red";
+    context.strokeRect(
+      this.state.posX,
+      this.state.posY,
+      this.state.size.width,
+      this.state.size.heigth
+    );
+  }
 
-    this.state.size = {
-      width: image.width * this.state.scale,
-      heigth: image.height * this.state.scale,
-    };
+  private draw(context: CanvasRenderingContext2D, image: HTMLImageElement) {
+    this.hitbox && this.showHitBox(context);
 
     context.drawImage(
       image,
@@ -65,6 +71,8 @@ class Bird {
       this.state.size.width,
       this.state.size.heigth
     );
+
+    context.restore();
   }
 
   private clearRect() {
@@ -82,7 +90,7 @@ class Bird {
     return !(this.state.posY <= this.canvas.height - this.state.size.heigth);
   }
 
-  private simulateColision() {
+  private simulateGravity() {
     this.state.gravitySpeed += this.state.gravity;
     this.state.posY += this.state.gravitySpeed;
   }
@@ -98,9 +106,10 @@ class Bird {
     this.state.frames++;
 
     this.updateSpriteIndex(8);
+    this.clearRect();
     this.draw(this.context, this.sprites[this.state.spriteIndex]);
 
-    !this.checkGroundCollision() ? this.simulateColision() : this.gameOver();
+    !this.checkGroundCollision() ? this.simulateGravity() : this.gameOver();
   }
 
   private handleClick(event: MouseEvent) {
