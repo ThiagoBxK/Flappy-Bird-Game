@@ -1,3 +1,4 @@
+import { AudioStatus, AudioEffects } from "./AudioEffects";
 import { createImage } from "./functions";
 
 interface BirdState {
@@ -22,12 +23,14 @@ class Bird {
   private interval: any;
   private hitbox: boolean;
   private scale: number;
+  private audios: { [key: string]: AudioEffects };
 
   constructor(canvas: HTMLCanvasElement) {
     this.canvas = canvas;
     this.context = canvas.getContext("2d") as CanvasRenderingContext2D;
     this.interval = null;
     this.scale = 1.25;
+    this.hitbox = true;
     this.state = {
       frames: 0,
       gravity: 0.3,
@@ -41,12 +44,14 @@ class Bird {
         heigth: 24 * this.scale,
       },
     };
-    this.hitbox = true;
     this.sprites = [
       createImage("./images/upflap.png"),
       createImage("./images/midflap.png"),
       createImage("./images/downflap.png"),
     ];
+    this.audios = {
+      wing: new AudioEffects("./audios/wing.wav"),
+    };
 
     this.canvas.addEventListener("click", (event) => this.handleClick(event));
   }
@@ -71,8 +76,6 @@ class Bird {
       this.state.size.width,
       this.state.size.heigth
     );
-
-    context.restore();
   }
 
   private clearRect() {
@@ -86,6 +89,10 @@ class Bird {
     }
   }
 
+  private checkSkyColision() {
+    return false;
+  }
+
   private checkGroundCollision() {
     return !(this.state.posY <= this.canvas.height - this.state.size.heigth);
   }
@@ -95,7 +102,7 @@ class Bird {
     this.state.posY += this.state.gravitySpeed;
   }
 
-  gameOver() {
+  private gameOver() {
     this.state.posY = this.canvas.height - this.state.size.heigth;
     clearInterval(this.interval);
 
@@ -113,6 +120,9 @@ class Bird {
   }
 
   private handleClick(event: MouseEvent) {
+    if (this.state.posY <= 0 - this.state.size.heigth) return;
+
+    this.audios.wing.setStatus(AudioStatus.Play);
     this.state.gravitySpeed = -7;
   }
 
