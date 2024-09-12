@@ -110,7 +110,7 @@ class Bird {
 
     this.updateSpriteIndex(8);
     this.clearRect();
-    this.draw(this.context, this.sprites[this.state.spriteIndex]);
+    //this.draw(this.context, this.sprites[this.state.spriteIndex]);
 
     !this.checkGroundCollision() ? this.simulateGravity() : this.gameOver();
   }
@@ -129,9 +129,7 @@ class Bird {
     );
   }
 
-  render() {
-    this.draw(this.context, this.sprites[this.state.spriteIndex]);
-  }
+  render() {}
 
   start() {
     this.loop();
