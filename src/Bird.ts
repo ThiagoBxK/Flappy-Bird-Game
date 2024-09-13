@@ -10,7 +10,7 @@ interface BirdState {
   posX: number;
   spriteIndex: number;
   size: {
-    heigth: number;
+    height: number;
     width: number;
   };
 }
@@ -41,7 +41,7 @@ class Bird {
       fps: 60,
       size: {
         width: 34 * this.scale,
-        heigth: 24 * this.scale,
+        height: 24 * this.scale,
       },
     };
     this.sprites = [
@@ -62,7 +62,7 @@ class Bird {
       this.state.posX,
       this.state.posY,
       this.state.size.width,
-      this.state.size.heigth
+      this.state.size.height
     );
   }
 
@@ -74,12 +74,17 @@ class Bird {
       this.state.posX,
       this.state.posY,
       this.state.size.width,
-      this.state.size.heigth
+      this.state.size.height
     );
   }
 
   private clearRect() {
-    this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    this.context.clearRect(
+      this.state.posX,
+      this.state.posY,
+      this.state.size.width,
+      this.state.size.height
+    );
   }
 
   private updateSpriteIndex(frameInterval: number) {
@@ -90,7 +95,7 @@ class Bird {
   }
 
   private checkGroundCollision() {
-    return !(this.state.posY <= this.canvas.height - this.state.size.heigth);
+    return !(this.state.posY <= this.canvas.height - this.state.size.height);
   }
 
   private simulateGravity() {
@@ -99,24 +104,24 @@ class Bird {
   }
 
   private gameOver() {
-    this.state.posY = this.canvas.height - this.state.size.heigth;
+    this.state.posY = this.canvas.height - this.state.size.height;
     clearInterval(this.interval);
 
     this.updateFrame();
   }
 
-  private updateFrame() {
+  updateFrame() {
     this.state.frames++;
 
     this.updateSpriteIndex(8);
-    this.clearRect();
-    //this.draw(this.context, this.sprites[this.state.spriteIndex]);
+    //this.clearRect();
+    this.draw(this.context, this.sprites[this.state.spriteIndex]);
 
     !this.checkGroundCollision() ? this.simulateGravity() : this.gameOver();
   }
 
   private handleClick(event: MouseEvent) {
-    if (this.state.posY <= 0 - this.state.size.heigth) return;
+    if (this.state.posY <= 0 - this.state.size.height) return;
 
     this.audios.wing.setStatus(AudioStatus.Play);
     this.state.gravitySpeed = -7;

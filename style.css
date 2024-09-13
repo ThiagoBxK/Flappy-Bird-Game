@@ -5,6 +5,7 @@
 }
 
 body {
+  user-select: none;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -13,5 +14,6 @@ body {
 }
 
 canvas {
+  pointer-events: none;
   border: 2px solid #303030;
 }

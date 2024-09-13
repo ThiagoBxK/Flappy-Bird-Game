@@ -1,36 +1,70 @@
 import { createImage } from "./functions";
 
+interface ScenarioState {
+  fps: number;
+  scenarioName: string;
+  posX: Array<number>;
+}
+
 export default class Scenario {
   private canvas: HTMLCanvasElement;
   private context: CanvasRenderingContext2D;
-  private scenario: HTMLImageElement | undefined;
-  private state: { scenarioName: string };
+  private state: ScenarioState;
+  private sprite: HTMLImageElement;
+  private interval: any;
 
   constructor(canvas: HTMLCanvasElement) {
     this.canvas = canvas;
     this.context = canvas.getContext("2d") as CanvasRenderingContext2D;
     this.state = {
+      fps: 60,
       scenarioName: "default-day",
+      posX: [0, canvas.width],
     };
-    this.scenario = undefined;
+    this.sprite = createImage(
+      `./images/scenarios/${this.state.scenarioName}.png`
+    );
   }
 
   private draw(context: CanvasRenderingContext2D, image: HTMLImageElement) {
-    context.drawImage(image, 0, 0, this.canvas.width, this.canvas.height);
+    this.state.posX.forEach((pos) => {
+      context.drawImage(image, pos, 0, this.canvas.width, this.canvas.height);
+    });
   }
 
-  setScenario(name: string) {
+  setScenario(name: string, callback?: (sprite: HTMLImageElement) => void) {
     this.state.scenarioName = name;
-    this.scenario = createImage(
-      `./images/scenarios/${this.state.scenarioName}.png`
-    );
+    const sprite = createImage(`./images/scenarios/${name}.png`);
 
-    this.scenario.onload = () => this.render();
+    sprite.onload = () => callback && callback(sprite);
   }
 
-  render(): void {
-    if (this.scenario) return this.draw(this.context, this.scenario);
+  private clearRect() {
+    this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+  }
 
-    this.setScenario(this.state.scenarioName);
+  infiniteScenarioLoop(call?: () => void) {
+    this.state.posX[0]--;
+    this.state.posX[1]--;
+
+    if (!(this.state.posX[0] * -1 <= this.canvas.width))
+      this.state.posX[0] = this.canvas.width;
+
+    if (this.state.posX[1] <= this.canvas.width * -1)
+      this.state.posX[1] = this.canvas.width;
+
+    this.draw(this.context, this.sprite);
+    call && call();
+  }
+
+  loop() {
+    this.interval = setInterval(
+      () => this.infiniteScenarioLoop(),
+      1000 / this.state.fps
+    );
+  }
+
+  render() {
+    this.sprite.onload = () => this.draw(this.context, this.sprite);
   }
 }

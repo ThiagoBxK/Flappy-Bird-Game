@@ -1,51 +1,63 @@
+// import Bird from "./Bird";
+// import { createImage } from "./functions";
+// import Scenario from "./Scenario";
+
 import Bird from "./Bird";
-import { createImage } from "./functions";
 import Scenario from "./Scenario";
 
-enum GameStatus {
-  Playing = "playing",
-  GameOver = "gameover",
-}
+// enum GameStatus {
+//   Playing = "playing",
+//   GameOver = "gameover",
+// }
 
-interface GameState {
-  scenarioName: string;
-}
+// interface GameState {
+//   scenarioName: string;
+// }
 
-class Game {
-  private canvas: HTMLCanvasElement;
-  readonly status: GameStatus | undefined;
-  private static instance: Game | null;
-  private bird: Bird;
-  readonly scenario: Scenario;
+// class Game {
+//   private canvas: HTMLCanvasElement;
+//   readonly status: GameStatus | undefined;
+//   private static instance: Game | null;
+//   private bird: Bird;
+//   readonly scenario: Scenario;
 
-  constructor(canvas: HTMLCanvasElement) {
-    this.canvas = canvas;
-    this.status = undefined;
+//   constructor(canvas: HTMLCanvasElement) {
+//     this.canvas = canvas;
+//     this.status = undefined;
 
-    this.bird = new Bird(canvas);
-    this.scenario = new Scenario(canvas);
-  }
+//     this.bird = new Bird(canvas);
+//     this.scenario = new Scenario(canvas);
+//   }
 
-  start() {}
+//   start() {}
 
-  render() {
-    this.scenario.render();
-    //this.bird.render();
-  }
-}
+//   render() {
+//     this.scenario.render();
+//     //this.bird.render();
+//   }
+// }
+
+// const canvas = document.getElementById("game") as HTMLCanvasElement;
+// const game = new Game(canvas);
+
+// document.addEventListener("DOMContentLoaded", () => {
+//   game.render();
+
+//   // const canvas = document.getElementById("game") as HTMLCanvasElement;
+//   // const background = new Scenario(canvas);
+//   // const bird = new Bird(canvas);
+//   // setTimeout(() => {
+//   //   background.render();
+//   //   bird.render();
+//   // }, 20);
+//   // bird.loop();
+// });
 
 const canvas = document.getElementById("game") as HTMLCanvasElement;
-const game = new Game(canvas);
+const scenario = new Scenario(canvas);
+const bird = new Bird(canvas);
 
-document.addEventListener("DOMContentLoaded", () => {
-  game.render();
+scenario.render();
+scenario.loop();
 
-  // const canvas = document.getElementById("game") as HTMLCanvasElement;
-  // const background = new Scenario(canvas);
-  // const bird = new Bird(canvas);
-  // setTimeout(() => {
-  //   background.render();
-  //   bird.render();
-  // }, 20);
-  // bird.loop();
-});
+bird.loop();
