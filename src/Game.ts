@@ -1,20 +1,21 @@
+import Bird from "./Bird";
 import Ground from "./Ground";
 import Scenario from "./Scenario";
 import { GameState } from "./types";
 
 export default class Game {
   private canvas: HTMLCanvasElement;
-  private context: CanvasRenderingContext2D;
   private scenario: Scenario;
   private ground: Ground;
+  private bird: Bird;
   private state: GameState;
   private interval: any;
 
   constructor(canvas: HTMLCanvasElement, state: GameState) {
     this.canvas = canvas;
-    this.context = canvas.getContext("2d") as CanvasRenderingContext2D;
     this.scenario = new Scenario(canvas, state);
     this.ground = new Ground(canvas, state);
+    this.bird = new Bird(canvas, state);
     this.interval = undefined;
     this.state = {
       fps: state.fps,
@@ -22,9 +23,25 @@ export default class Game {
     };
   }
 
+  private checkGroundColision(): boolean {
+    return (
+      this.bird.state.posY >=
+      this.canvas.height -
+        this.ground.groundSize * 0.8 -
+        this.bird.state.size.height
+    );
+  }
+
   private loop() {
+    // Temporary
+    if (this.checkGroundColision()) {
+      this.bird.state.posY = this.canvas.height - this.ground.groundSize - 4;
+      this.lose();
+    }
+
     this.scenario.updateFrame();
     this.ground.updateFrame();
+    this.bird.updateFrame();
   }
 
   start() {
@@ -38,5 +55,6 @@ export default class Game {
   render() {
     this.scenario.render();
     this.ground.render();
+    this.bird.render();
   }
 }

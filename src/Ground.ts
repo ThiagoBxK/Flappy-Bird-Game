@@ -5,7 +5,7 @@ export default class Ground {
   private canvas: HTMLCanvasElement;
   private context: CanvasRenderingContext2D;
   private sprite: HTMLImageElement;
-  private groundSize: number;
+  readonly groundSize: number;
   private state: {
     posX: Array<number>;
     posY: Array<number>;

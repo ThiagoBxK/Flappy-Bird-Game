@@ -14,6 +14,5 @@ body {
 }
 
 canvas {
-  pointer-events: none;
   border: 2px solid #303030;
 }
