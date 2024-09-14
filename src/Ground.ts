@@ -4,54 +4,50 @@ export default class Ground {
   private canvas: HTMLCanvasElement;
   private context: CanvasRenderingContext2D;
   private sprite: HTMLImageElement;
-  private floorSize: number;
+  private groundSize: number;
   private state: {
     posX: Array<number>;
     posY: Array<number>;
-    speed: number;
+    groundSpeed: number;
   };
 
   constructor(canvas: HTMLCanvasElement) {
     this.canvas = canvas;
     this.context = canvas.getContext("2d") as CanvasRenderingContext2D;
-    this.sprite = createImage(`./images/floor.png`);
-    this.floorSize = 128;
+    this.groundSize = 128;
     this.state = {
+      groundSpeed: 1,
       posX: [0, canvas.width],
       posY: [
-        canvas.height - this.floorSize * 0.8,
-        canvas.height - this.floorSize * 0.8,
+        canvas.height - this.groundSize * 0.8,
+        canvas.height - this.groundSize * 0.8,
       ],
-      speed: 2,
     };
+    this.sprite = createImage(`./images/ground.png`);
   }
 
   private draw() {
-    this.state.posX.forEach((posX: number, index: number) => {
+    this.state.posX.forEach((posX, index) => {
       this.context.drawImage(
         this.sprite,
         posX,
         this.state.posY[index],
         this.canvas.width,
-        this.floorSize
+        this.groundSize
       );
     });
   }
 
-  private clear() {
-    this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-  }
-
   updateFrame() {
-    this.state.posX[0] -= this.state.speed;
-    this.state.posX[1] -= this.state.speed;
+    this.state.posX[0] -= this.state.groundSpeed;
+    this.state.posX[1] -= this.state.groundSpeed;
 
     if (Math.abs(this.state.posX[0]) >= this.canvas.width)
       this.state.posX[0] = this.canvas.width;
     else if (Math.abs(this.state.posX[1]) >= this.canvas.width)
       this.state.posX[1] = this.canvas.width;
 
-    this.clear();
+    //this.clear();
     this.draw();
   }
 
