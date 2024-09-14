@@ -1,16 +1,24 @@
-import Ground from "./Ground";
-import Scenario from "./Scenario";
+import Game from "./Game";
 
 const canvas = document.getElementById("game") as HTMLCanvasElement;
-const ground = new Ground(canvas);
-const scenario = new Scenario(canvas);
+const game = new Game(canvas, {
+  speed: 1,
+  fps: 60,
+});
 
-function clear() {
-  const context = canvas.getContext("2d") as CanvasRenderingContext2D;
-  context.clearRect(0, 0, canvas.width, canvas.height);
-}
+game.render();
+game.start();
 
-setInterval(() => {
-  scenario.updateFrame();
-  ground.updateFrame();
-}, 1000 / 60);
+setTimeout(() => {
+  game.lose();
+}, 1000);
+
+// function clear() {
+//   const context = canvas.getContext("2d") as CanvasRenderingContext2D;
+//   context.clearRect(0, 0, canvas.width, canvas.height);
+// }
+
+// setInterval(() => {
+//   scenario.updateFrame();
+//   ground.updateFrame();
+// }, 1000 / 60);

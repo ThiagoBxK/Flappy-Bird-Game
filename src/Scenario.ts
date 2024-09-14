@@ -1,4 +1,5 @@
 import { createImage } from "./functions";
+import { GameState } from "./types";
 
 export default class Scenario {
   private canvas: HTMLCanvasElement;
@@ -10,12 +11,12 @@ export default class Scenario {
     scenarioSpeed: number;
   };
 
-  constructor(canvas: HTMLCanvasElement) {
+  constructor(canvas: HTMLCanvasElement, gameState: GameState) {
     this.canvas = canvas;
     this.context = canvas.getContext("2d") as CanvasRenderingContext2D;
     this.state = {
+      scenarioSpeed: gameState.speed,
       scenarioName: "default-day",
-      scenarioSpeed: 1,
       posX: [0, canvas.width],
     };
     this.sprite = createImage(
@@ -44,7 +45,6 @@ export default class Scenario {
     else if (Math.abs(this.state.posX[1]) >= this.canvas.width)
       this.state.posX[1] = this.canvas.width;
 
-    //this.clear();
     this.draw();
   }
 

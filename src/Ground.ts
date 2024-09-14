@@ -1,4 +1,5 @@
 import { createImage } from "./functions";
+import { GameState } from "./types";
 
 export default class Ground {
   private canvas: HTMLCanvasElement;
@@ -11,12 +12,12 @@ export default class Ground {
     groundSpeed: number;
   };
 
-  constructor(canvas: HTMLCanvasElement) {
+  constructor(canvas: HTMLCanvasElement, gameState: GameState) {
     this.canvas = canvas;
     this.context = canvas.getContext("2d") as CanvasRenderingContext2D;
     this.groundSize = 128;
     this.state = {
-      groundSpeed: 1,
+      groundSpeed: gameState.speed,
       posX: [0, canvas.width],
       posY: [
         canvas.height - this.groundSize * 0.8,
@@ -47,7 +48,6 @@ export default class Ground {
     else if (Math.abs(this.state.posX[1]) >= this.canvas.width)
       this.state.posX[1] = this.canvas.width;
 
-    //this.clear();
     this.draw();
   }
 
