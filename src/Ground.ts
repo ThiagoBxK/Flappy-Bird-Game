@@ -24,7 +24,7 @@ export default class Ground {
         canvas.height - this.groundSize * 0.8,
       ],
     };
-    this.sprite = createImage(`./images/ground.png`);
+    this.sprite = createImage(`./images/sprites/ground.png`);
   }
 
   private draw() {

@@ -20,7 +20,7 @@ export default class Scenario {
       posX: [0, canvas.width],
     };
     this.sprite = createImage(
-      `./images/scenarios/${this.state.scenarioName}.png`
+      `./images/sprites/scenarios/${this.state.scenarioName}.png`
     );
   }
 
