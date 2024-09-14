@@ -1,70 +1,67 @@
 import { createImage } from "./functions";
 
 interface ScenarioState {
-  fps: number;
   scenarioName: string;
   posX: Array<number>;
+  scenarioSpeed: number;
 }
 
 export default class Scenario {
   private canvas: HTMLCanvasElement;
   private context: CanvasRenderingContext2D;
-  private state: ScenarioState;
   private sprite: HTMLImageElement;
-  private interval: any;
+  private state: ScenarioState;
+  public loopInterval: number | undefined;
 
   constructor(canvas: HTMLCanvasElement) {
     this.canvas = canvas;
     this.context = canvas.getContext("2d") as CanvasRenderingContext2D;
     this.state = {
-      fps: 60,
       scenarioName: "default-day",
+      scenarioSpeed: 1,
       posX: [0, canvas.width],
     };
     this.sprite = createImage(
       `./images/scenarios/${this.state.scenarioName}.png`
     );
+    this.loopInterval = undefined;
   }
 
-  private draw(context: CanvasRenderingContext2D, image: HTMLImageElement) {
-    this.state.posX.forEach((pos) => {
-      context.drawImage(image, pos, 0, this.canvas.width, this.canvas.height);
-    });
-  }
-
-  setScenario(name: string, callback?: (sprite: HTMLImageElement) => void) {
-    this.state.scenarioName = name;
-    const sprite = createImage(`./images/scenarios/${name}.png`);
-
-    sprite.onload = () => callback && callback(sprite);
-  }
-
-  private clearRect() {
+  private clearCanvas() {
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
   }
 
-  infiniteScenarioLoop(call?: () => void) {
-    this.state.posX[0]--;
-    this.state.posX[1]--;
-
-    if (!(this.state.posX[0] * -1 <= this.canvas.width))
-      this.state.posX[0] = this.canvas.width;
-
-    if (this.state.posX[1] <= this.canvas.width * -1)
-      this.state.posX[1] = this.canvas.width;
-
-    this.draw(this.context, this.sprite);
-    call && call();
+  private draw() {
+    this.state.posX.forEach((pos) => {
+      this.context.drawImage(
+        this.sprite,
+        pos,
+        0,
+        this.canvas.width,
+        this.canvas.height
+      );
+    });
   }
 
-  loop() {
-    this.interval = setInterval(
-      () => this.infiniteScenarioLoop(),
-      1000 / this.state.fps
-    );
+  private updateScenario() {
+    this.state.posX[0] -= this.state.scenarioSpeed;
+    this.state.posX[1] -= this.state.scenarioSpeed;
+
+    if (Math.abs(this.state.posX[0]) >= this.canvas.width) {
+      this.state.posX[0] = this.canvas.width;
+    } else if (Math.abs(this.state.posX[1]) >= this.canvas.width) {
+      this.state.posX[1] = this.canvas.width;
+    }
+
+    this.clearCanvas();
+    this.draw();
   }
 
   render() {
-    this.sprite.onload = () => this.draw(this.context, this.sprite);
+    this.sprite.onload = () => this.draw();
+  }
+
+  loop() {
+    this.loopInterval = setInterval(() => this.updateScenario(), 1000 / 60);
   }
 }

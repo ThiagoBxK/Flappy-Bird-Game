@@ -78,15 +78,6 @@ class Bird {
     );
   }
 
-  private clearRect() {
-    this.context.clearRect(
-      this.state.posX,
-      this.state.posY,
-      this.state.size.width,
-      this.state.size.height
-    );
-  }
-
   private updateSpriteIndex(frameInterval: number) {
     if (this.state.frames % frameInterval === 0) {
       this.state.spriteIndex =
@@ -114,10 +105,9 @@ class Bird {
     this.state.frames++;
 
     this.updateSpriteIndex(8);
-    //this.clearRect();
     this.draw(this.context, this.sprites[this.state.spriteIndex]);
 
-    !this.checkGroundCollision() ? this.simulateGravity() : this.gameOver();
+    //!this.checkGroundCollision() ? this.simulateGravity() : this.gameOver();
   }
 
   private handleClick(event: MouseEvent) {

@@ -54,10 +54,28 @@ import Scenario from "./Scenario";
 // });
 
 const canvas = document.getElementById("game") as HTMLCanvasElement;
-const scenario = new Scenario(canvas);
-const bird = new Bird(canvas);
 
-scenario.render();
-scenario.loop();
+import Ground from "./Ground";
 
-bird.loop();
+const ground = new Ground(canvas);
+
+ground.render();
+
+setInterval(() => {
+  ground.updateFrame();
+}, 1000 / 60);
+
+// const scenario = new Scenario(canvas);
+// const bird = new Bird(canvas);
+
+// scenario.render();
+// scenario.loop();
+// bird.start();
+
+// clearInterval(scenario.interval);
+// const bird = new Bird(canvas);
+
+// scenario.render();
+// scenario.loop();
+
+// bird.loop();
