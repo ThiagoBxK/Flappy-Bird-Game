@@ -1,31 +1,18 @@
 import { AudioStatus, AudioEffects } from "./AudioEffects";
 import { createImage } from "./functions";
-import { GameState } from "./types";
+import { BirdState, GameState } from "./types";
 
 class Bird {
   private canvas: HTMLCanvasElement;
   private context: CanvasRenderingContext2D;
   private sprites: Array<HTMLImageElement>;
-  public state: {
-    fps: number;
-    frames: number;
-    gravity: number;
-    gravitySpeed: number;
-    posY: number;
-    posX: number;
-    spriteIndex: number;
-    size: {
-      height: number;
-      width: number;
-    };
-  };
-  private scale: number;
+  public state: BirdState;
+
   private audios: { [key: string]: AudioEffects };
 
   constructor(canvas: HTMLCanvasElement, gameState: GameState) {
     this.canvas = canvas;
     this.context = canvas.getContext("2d") as CanvasRenderingContext2D;
-    this.scale = 1.25;
     this.state = {
       frames: 0,
       gravity: 0.3,
@@ -33,10 +20,11 @@ class Bird {
       posY: 100,
       posX: 20,
       spriteIndex: 0,
+      status: gameState.status,
       fps: gameState.fps,
       size: {
-        width: 34 * this.scale,
-        height: 24 * this.scale,
+        width: 34 * 1.15,
+        height: 24 * 1.15,
       },
     };
     this.sprites = [
@@ -47,8 +35,6 @@ class Bird {
     this.audios = {
       wing: new AudioEffects("./audios/wing.wav"),
     };
-
-    this.canvas.addEventListener("click", (event) => this.handleClick(event));
   }
 
   private draw() {
@@ -77,22 +63,18 @@ class Bird {
     this.state.frames++;
 
     this.updateSpriteIndex(8);
-    this.draw();
+
     this.simulateGravity();
+    this.draw();
   }
 
-  setDiePosition() {
-    this.state.posY = this.canvas.height - this.state.size.height;
-    this.updateFrame();
-  }
-
-  private handleClick(event: MouseEvent) {
+  handleClick(event: MouseEvent) {
     this.audios.wing.setStatus(AudioStatus.Play);
     this.state.gravitySpeed = -7;
   }
 
   render() {
-    this.sprites[0].onload = () => this.draw();
+    this.draw();
   }
 }
 

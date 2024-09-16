@@ -5,3 +5,7 @@ const game = new Game(canvas);
 
 game.render();
 game.start();
+
+canvas.addEventListener("click", (event) => {
+  game.handleClick(event);
+});

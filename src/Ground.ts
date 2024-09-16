@@ -1,5 +1,5 @@
 import { createImage } from "./functions";
-import { GameState, ISprite } from "./types";
+import { BirdState, GameState, ISprite } from "./types";
 
 export default class Ground {
   private canvas: HTMLCanvasElement;
@@ -10,14 +10,16 @@ export default class Ground {
     width: number;
   } & GameState;
 
-  constructor(canvas: HTMLCanvasElement, defaultState: GameState) {
+  constructor(canvas: HTMLCanvasElement, gameState: GameState) {
     this.canvas = canvas;
     this.context = canvas.getContext("2d") as CanvasRenderingContext2D;
 
     this.state = {
+      status: gameState.status,
+      fps: gameState.fps,
+      speed: gameState.speed,
       height: 96,
       width: canvas.width,
-      ...defaultState,
     };
     this.sprites = [
       {
@@ -43,6 +45,16 @@ export default class Ground {
         this.state.height
       );
     });
+  }
+
+  checkColision(birdState: BirdState) {
+    return (
+      birdState.posY >=
+      this.canvas.height -
+        this.state.height -
+        birdState.size.height -
+        birdState.gravitySpeed
+    );
   }
 
   updateFrame() {

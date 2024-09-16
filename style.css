@@ -1,3 +1,10 @@
+@font-face {
+  font-family: "Flappy Font";
+  src: url("./flappy-font.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -11,6 +18,7 @@ body {
   justify-content: center;
   min-height: 100vh;
   flex-direction: column;
+  font-family: "Flappy Font";
 }
 
 canvas {

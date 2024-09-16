@@ -7,12 +7,14 @@ export default class Background {
   private sprites: Array<ISprite>;
   private state: {} & GameState;
 
-  constructor(canvas: HTMLCanvasElement, defaultState: GameState) {
+  constructor(canvas: HTMLCanvasElement, gameState: GameState) {
     this.canvas = canvas;
     this.context = canvas.getContext("2d") as CanvasRenderingContext2D;
 
     this.state = {
-      ...defaultState,
+      status: gameState.status,
+      fps: gameState.fps,
+      speed: gameState.speed,
     };
     this.sprites = [
       {
