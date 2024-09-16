@@ -1,20 +1,7 @@
 import Game from "./Game";
 
 const canvas = document.getElementById("game") as HTMLCanvasElement;
-const game = new Game(canvas, {
-  speed: 1,
-  fps: 60,
-});
+const game = new Game(canvas);
 
 game.render();
 game.start();
-
-// function clear() {
-//   const context = canvas.getContext("2d") as CanvasRenderingContext2D;
-//   context.clearRect(0, 0, canvas.width, canvas.height);
-// }
-
-// setInterval(() => {
-//   scenario.updateFrame();
-//   ground.updateFrame();
-// }, 1000 / 60);

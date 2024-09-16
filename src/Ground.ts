@@ -1,57 +1,63 @@
 import { createImage } from "./functions";
-import { GameState } from "./types";
+import { GameState, ISprite } from "./types";
 
 export default class Ground {
   private canvas: HTMLCanvasElement;
   private context: CanvasRenderingContext2D;
-  private sprite: HTMLImageElement;
-  readonly groundSize: number;
+  private sprites: Array<ISprite>;
   private state: {
-    posX: Array<number>;
-    posY: Array<number>;
-    groundSpeed: number;
-  };
+    height: number;
+    width: number;
+  } & GameState;
 
-  constructor(canvas: HTMLCanvasElement, gameState: GameState) {
+  constructor(canvas: HTMLCanvasElement, defaultState: GameState) {
     this.canvas = canvas;
     this.context = canvas.getContext("2d") as CanvasRenderingContext2D;
-    this.groundSize = 128;
+
     this.state = {
-      groundSpeed: gameState.speed,
-      posX: [0, canvas.width],
-      posY: [
-        canvas.height - this.groundSize * 0.8,
-        canvas.height - this.groundSize * 0.8,
-      ],
+      height: 96,
+      width: canvas.width,
+      ...defaultState,
     };
-    this.sprite = createImage(`./images/sprites/ground.png`);
+    this.sprites = [
+      {
+        image: createImage(`./images/sprites/ground.png`),
+        posX: 0,
+        posY: canvas.height - this.state.height,
+      },
+      {
+        image: createImage(`./images/sprites/ground.png`),
+        posX: canvas.width,
+        posY: canvas.height - this.state.height,
+      },
+    ];
   }
 
-  private draw() {
-    this.state.posX.forEach((posX, index) => {
+  draw() {
+    this.sprites.forEach((sprite) => {
       this.context.drawImage(
-        this.sprite,
-        posX,
-        this.state.posY[index],
-        this.canvas.width,
-        this.groundSize
+        sprite.image,
+        sprite.posX,
+        sprite.posY,
+        this.state.width,
+        this.state.height
       );
     });
   }
 
   updateFrame() {
-    this.state.posX[0] -= this.state.groundSpeed;
-    this.state.posX[1] -= this.state.groundSpeed;
+    this.sprites[0].posX -= this.state.speed;
+    this.sprites[1].posX -= this.state.speed;
 
-    if (Math.abs(this.state.posX[0]) >= this.canvas.width)
-      this.state.posX[0] = this.canvas.width;
-    else if (Math.abs(this.state.posX[1]) >= this.canvas.width)
-      this.state.posX[1] = this.canvas.width;
+    if (Math.abs(this.sprites[0].posX) >= this.canvas.width)
+      this.sprites[0].posX = this.canvas.width;
+    else if (Math.abs(this.sprites[1].posX) >= this.canvas.width)
+      this.sprites[1].posX = this.canvas.width;
 
-    this.draw();
+    this.render();
   }
 
   render() {
-    this.sprite.onload = () => this.draw();
+    this.draw();
   }
 }

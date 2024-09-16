@@ -1,35 +1,39 @@
 import { createImage } from "./functions";
-import { GameState } from "./types";
+import { GameState, ISprite } from "./types";
 
-export default class Scenario {
+export default class Background {
   private canvas: HTMLCanvasElement;
   private context: CanvasRenderingContext2D;
-  private sprite: HTMLImageElement;
-  private state: {
-    scenarioName: string;
-    posX: Array<number>;
-    scenarioSpeed: number;
-  };
+  private sprites: Array<ISprite>;
+  private state: {} & GameState;
 
-  constructor(canvas: HTMLCanvasElement, gameState: GameState) {
+  constructor(canvas: HTMLCanvasElement, defaultState: GameState) {
     this.canvas = canvas;
     this.context = canvas.getContext("2d") as CanvasRenderingContext2D;
+
     this.state = {
-      scenarioSpeed: gameState.speed,
-      scenarioName: "default-day",
-      posX: [0, canvas.width],
+      ...defaultState,
     };
-    this.sprite = createImage(
-      `./images/sprites/scenarios/${this.state.scenarioName}.png`
-    );
+    this.sprites = [
+      {
+        image: createImage(`./images/sprites/scenarios/default-day.png`),
+        posX: 0,
+        posY: 0,
+      },
+      {
+        image: createImage(`./images/sprites/scenarios/default-day.png`),
+        posX: canvas.width,
+        posY: 0,
+      },
+    ];
   }
 
-  private draw() {
-    this.state.posX.forEach((posX, index) => {
+  draw() {
+    this.sprites.forEach((sprite) => {
       this.context.drawImage(
-        this.sprite,
-        posX,
-        0,
+        sprite.image,
+        sprite.posX,
+        sprite.posY,
         this.canvas.width,
         this.canvas.height
       );
@@ -37,18 +41,18 @@ export default class Scenario {
   }
 
   updateFrame() {
-    this.state.posX[0] -= this.state.scenarioSpeed;
-    this.state.posX[1] -= this.state.scenarioSpeed;
+    this.sprites[0].posX -= this.state.speed;
+    this.sprites[1].posX -= this.state.speed;
 
-    if (Math.abs(this.state.posX[0]) >= this.canvas.width)
-      this.state.posX[0] = this.canvas.width;
-    else if (Math.abs(this.state.posX[1]) >= this.canvas.width)
-      this.state.posX[1] = this.canvas.width;
+    if (Math.abs(this.sprites[0].posX) >= this.canvas.width)
+      this.sprites[0].posX = this.canvas.width;
+    else if (Math.abs(this.sprites[1].posX) >= this.canvas.width)
+      this.sprites[1].posX = this.canvas.width;
 
-    this.draw();
+    this.render();
   }
 
   render() {
-    this.sprite.onload = () => this.draw();
+    this.draw();
   }
 }
