@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
+
 @font-face {
   font-family: "Flappy Font";
   src: url("./flappy-font.ttf") format("truetype");
@@ -19,8 +21,30 @@ body {
   min-height: 100vh;
   flex-direction: column;
   font-family: "Flappy Font";
+  cursor: url("./images/cursor.png"), auto;
 }
 
 canvas {
   border: 2px solid #303030;
+}
+
+.created-by {
+  position: absolute;
+  bottom: 5%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  font-size: 0.95rem;
+  background-color: #050505;
+  padding: 12px 12px;
+  border-radius: 16px;
+  color: #fff;
+  font-family: sans-serif;
+  cursor: url("./images/cursor.png"), auto;
+}
+
+.created-by > img {
+  filter: invert(1);
+  height: 24px;
 }

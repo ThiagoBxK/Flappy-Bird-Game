@@ -36,6 +36,11 @@ export default class Game {
     this.bird.updateFrame();
     this.pipe.updateFrame();
     this.ground.updateFrame();
+
+    this.context.font = "12px Montserrat";
+    this.context.fillStyle = "#000";
+
+    this.context.fillText("By: Thiago Soares", 15, this.canvas.height - 15);
   }
 
   private changeStatus(newStatus: string) {
