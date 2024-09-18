@@ -70,7 +70,7 @@ class Bird {
 
   handleClick(event: MouseEvent) {
     this.audios.wing.setStatus(AudioStatus.Play);
-    this.state.gravitySpeed = -7;
+    this.state.gravitySpeed = -5;
   }
 
   render() {

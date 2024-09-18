@@ -1,5 +1,6 @@
 import Bird from "./Bird";
 import Ground from "./Ground";
+import Pipe from "./Pipe";
 import Background from "./Scenario";
 import { GameState } from "./types";
 
@@ -11,6 +12,7 @@ export default class Game {
   private background: Background;
   private ground: Ground;
   private bird: Bird;
+  private pipe: Pipe;
 
   constructor(canvas: HTMLCanvasElement) {
     this.canvas = canvas;
@@ -24,14 +26,16 @@ export default class Game {
     this.background = new Background(canvas, this.state);
     this.ground = new Ground(canvas, this.state);
     this.bird = new Bird(canvas, this.state);
+    this.pipe = new Pipe(canvas, this.state);
   }
 
   updateFrame() {
-    if (this.ground.checkColision(this.bird.state)) return this.over();
+    if (this.ground.checkColision(this.bird.state)) return this.over(); //;
 
     this.background.updateFrame();
-    this.ground.updateFrame();
     this.bird.updateFrame();
+    this.pipe.updateFrame();
+    this.ground.updateFrame();
   }
 
   private changeStatus(newStatus: string) {
@@ -59,6 +63,7 @@ export default class Game {
   render() {
     // Temporariamente
     setTimeout(() => {
+      this.pipe.render();
       this.background.render();
       this.ground.render();
       this.bird.render();
